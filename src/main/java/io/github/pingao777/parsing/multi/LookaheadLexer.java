@@ -7,7 +7,7 @@ package io.github.pingao777.parsing.multi;
  * courses, books, articles, and the like. Contact us if you are in doubt.
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/tpdsl for more book information.
-***/
+ ***/
 public class LookaheadLexer extends Lexer {
     public static int NAME = 2;
     public static int COMMA = 3;
@@ -15,43 +15,69 @@ public class LookaheadLexer extends Lexer {
     public static int RBRACK = 5;
     public static int EQUALS = 6;
     public static String[] tokenNames =
-        { "n/a", "<EOF>", "NAME", ",", "[", "]", "=" };
+        {"n/a", "<EOF>", "NAME", ",", "[", "]", "="};
+
+    @Override
     public String getTokenName(int x) { return LookaheadLexer.tokenNames[x]; }
 
     public LookaheadLexer(String input) { super(input); }
-    boolean isLETTER() { return c>='a'&&c<='z' || c>='A'&&c<='Z'; }
 
+    boolean isLETTER() { return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'; }
+
+    @Override
     public Token nextToken() {
-        while ( c!=EOF ) {
-            switch ( c ) {
-                case ' ': case '\t': case '\n': case '\r': WS(); continue;
-                case ',' : consume(); return new Token(COMMA, ",");
-                case '[' : consume(); return new Token(LBRACK, "[");
-                case ']' : consume(); return new Token(RBRACK, "]");
-                case '=' : consume(); return new Token(EQUALS, "=");
+        while (c != EOF) {
+            switch (c) {
+                case ' ':
+                case '\t':
+                case '\n':
+                case '\r':
+                    WS();
+                    continue;
+                case ',':
+                    consume();
+                    return new Token(COMMA, ",");
+                case '[':
+                    consume();
+                    return new Token(LBRACK, "[");
+                case ']':
+                    consume();
+                    return new Token(RBRACK, "]");
+                case '=':
+                    consume();
+                    return new Token(EQUALS, "=");
                 default:
-                    if ( isLETTER() ) return name();
-                    throw new Error("invalid character: "+c);
+                    if (isLETTER()) { return name(); }
+                    throw new Error("invalid character: " + c);
             }
         }
-        return new Token(EOF_TYPE,"<EOF>");
+        return new Token(EOF_TYPE, "<EOF>");
     }
 
-    /** name : LETTER+ ; // name is sequence of >=1 letter */
+    /**
+     * name : LETTER+ ; // name is sequence of >=1 letter
+     */
     Token name() {
         StringBuilder buf = new StringBuilder();
-        do { buf.append(c); LETTER(); } while ( isLETTER() );
+        do {
+            buf.append(c);
+            LETTER();
+        } while (isLETTER());
         return new Token(NAME, buf.toString());
     }
 
-    /** LETTER   : 'a'..'z'|'A'..'Z'; // define what a letter is (\w) */
+    /**
+     * LETTER   : 'a'..'z'|'A'..'Z'; // define what a letter is (\w)
+     */
     void LETTER() {
-        if ( isLETTER() ) consume();
-        else throw new Error("expecting LETTER; found "+c);
+        if (isLETTER()) { consume(); } else { throw new Error("expecting LETTER; found " + c); }
     }
 
-    /** WS : (' '|'\t'|'\n'|'\r')* ; // ignore any whitespace */
+    /**
+     * WS : (' '|'\t'|'\n'|'\r')* ; // ignore any whitespace
+     */
+    @Override
     void WS() {
-        while ( c==' ' || c=='\t' || c=='\n' || c=='\r' ) advance();
+        while (c == ' ' || c == '\t' || c == '\n' || c == '\r') advance();
     }
 }

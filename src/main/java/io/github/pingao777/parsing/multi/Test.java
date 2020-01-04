@@ -7,10 +7,10 @@ package io.github.pingao777.parsing.multi;
  * courses, books, articles, and the like. Contact us if you are in doubt.
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/tpdsl for more book information.
-***/
+ ***/
 public class Test {
     public static void main(String[] args) {
-        LookaheadLexer lexer = new LookaheadLexer(args[0]); // parse arg
+        LookaheadLexer lexer = new LookaheadLexer("[a,b=c,[d,e]]"); // parse arg
         LookaheadParser parser = new LookaheadParser(lexer, 2);
         parser.list(); // begin parsing at rule list
     }

@@ -39,5 +39,4 @@ public abstract class Lexer {
     public abstract Token nextToken();
     abstract void WS();
     public abstract String getTokenName(int x);
-    
 }
